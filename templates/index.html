@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Interview Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>AI Interview Simulator</h1>
+
+    <button onclick="getQuestion()">Get Question</button>
+
+    <p id="question"></p>
+
+    <textarea id="answer" rows="5" cols="50" placeholder="Type your answer here..."></textarea><br><br>
+
+    <button onclick="submitAnswer()">Submit Answer</button>
+
+    <p id="feedback"></p>
+
+    <script>
+        function getQuestion() {
+            fetch("/get_question")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("question").innerText = data.question;
+            });
+        }
+
+        function submitAnswer() {
+            let answer = document.getElementById("answer").value;
+
+            fetch("/submit_answer", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({answer: answer})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("feedback").innerText = data.feedback;
+            });
+        }
+    </script>
+
+</body>
+</html>
